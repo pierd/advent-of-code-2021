@@ -1,5 +1,3 @@
-use std::io::{self, Read};
-
 const LITERAL_TYPE: usize = 4;
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -85,12 +83,6 @@ where
 {
     fn new(iter: Iter) -> Self {
         Self { iter, bits_read: 0 }
-    }
-
-    fn advance(&mut self) {
-        while self.bits_read % 8 != 0 {
-            self.get_bit();
-        }
     }
 
     fn get_bit(&mut self) -> bool {
