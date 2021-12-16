@@ -35,10 +35,16 @@ impl Packet {
         match self {
             &Packet::Literal { num, .. } => num,
             &Packet::Operator { t, ref packets, .. } => match t {
-                0 => packets.iter().map(|p| p.value()).sum(),
-                1 => packets.iter().map(|p| p.value()).product(),
-                2 => packets.iter().map(|p| p.value()).min().unwrap(),
-                3 => packets.iter().map(|p| p.value()).max().unwrap(),
+                0..=3 => {
+                    let all = packets.iter().map(Packet::value);
+                    match t {
+                        0 => all.sum(),
+                        1 => all.product(),
+                        2 => all.min().unwrap(),
+                        3 => all.max().unwrap(),
+                        _ => unreachable!(),
+                    }
+                },
                 5..=7 => {
                     let left = packets[0].value();
                     let right = packets[1].value();
