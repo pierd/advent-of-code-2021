@@ -44,7 +44,7 @@ impl Packet {
                         3 => all.max().unwrap(),
                         _ => unreachable!(),
                     }
-                },
+                }
                 5..=7 => {
                     let left = packets[0].value();
                     let right = packets[1].value();
