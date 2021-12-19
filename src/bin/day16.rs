@@ -24,8 +24,8 @@ enum Packet {
 impl Packet {
     fn version_sum(&self) -> usize {
         match self {
-            &Packet::Literal { v, .. } => v,
-            &Packet::Operator { v, ref packets, .. } => {
+            Packet::Literal { v, .. } => *v,
+            Packet::Operator { v, packets, .. } => {
                 packets.iter().map(|p| p.version_sum()).sum::<usize>() + v
             }
         }
@@ -33,8 +33,8 @@ impl Packet {
 
     fn value(&self) -> usize {
         match self {
-            &Packet::Literal { num, .. } => num,
-            &Packet::Operator { t, ref packets, .. } => match t {
+            Packet::Literal { num, .. } => *num,
+            Packet::Operator { t, packets, .. } => match t {
                 0..=3 => {
                     let all = packets.iter().map(Packet::value);
                     match t {
