@@ -261,6 +261,13 @@ mod tests {
         assert_eq!(num, Pair::parse(output).unwrap());
     }
 
+    fn should_not<R, F: FnOnce(&mut Pair) -> Option<R>>(input: &str, transform: F) {
+        let mut num = Pair::parse(input).unwrap();
+        let original = num.clone();
+        assert!(transform(&mut num).is_none());
+        assert_eq!(num, original);
+    }
+
     #[test]
     fn test_explode() {
         should("[[[[[9,8],1],2],3],4]", Pair::explode, "[[[[0,9],2],3],4]");
@@ -280,10 +287,7 @@ mod tests {
 
     #[test]
     fn test_split() {
-        assert!(Pair::parse("[[[[[9,8],1],2],3],4]")
-            .unwrap()
-            .split()
-            .is_none());
+        should_not("[[[[[9,8],1],2],3],4]", Pair::split);
         should(
             "[[[[0,7],4],[15,[0,13]]],[1,1]]",
             Pair::split,
