@@ -80,8 +80,8 @@ impl DiracGameState {
     }
 
     fn after_roll(&self, player: usize, roll: usize, apply_score: bool) -> Self {
-        let mut positions = self.positions.clone();
-        let mut scores = self.scores.clone();
+        let mut positions = self.positions;
+        let mut scores = self.scores;
         let new_position = (positions[player] + roll) % 10;
         positions[player] = new_position;
         if apply_score {

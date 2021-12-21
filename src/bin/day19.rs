@@ -126,7 +126,7 @@ impl Matrix {
     }
 
     fn with_matching_translation(&self, from: &Vector, to: &Vector) -> Self {
-        let mut result = self.clone();
+        let mut result = *self;
         let vec = self * from;
         for i in 0..3 {
             result.0[i][3] = to.0[i] - vec.0[i];
@@ -223,7 +223,7 @@ fn match_readings(base_readings: &HashSet<Vector>, readings: &[Vector]) -> Match
 }
 
 // very crap solution - repeats a lot of calculations over and over again (full solution takes almost 30mins)
-fn match_all(readings: &Vec<Vec<Vector>>) -> (HashSet<Vector>, Vec<Matrix>) {
+fn match_all(readings: &[Vec<Vector>]) -> (HashSet<Vector>, Vec<Matrix>) {
     let mut transformations = vec![None; readings.len()];
     let mut absolute_readings = HashSet::from_iter(readings.first().unwrap().iter().cloned());
     let mut matched_readings = HashSet::new();

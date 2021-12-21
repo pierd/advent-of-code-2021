@@ -7,7 +7,7 @@ fn parse(input: &str) -> (EnhanceVec, Image) {
     lines.next(); // skip empty line
 
     let mut pixels = Vec::new();
-    while let Some(line) = lines.next() {
+    for line in lines {
         pixels.push(line.chars().map(|c| c == '#').collect());
     }
 
@@ -116,7 +116,7 @@ impl Image {
     fn enhanced_times_with(&self, enhance: &EnhanceVec, times: usize) -> Self {
         let mut result = self.clone();
         for _ in 0..times {
-            result = result.enhanced_with(&enhance);
+            result = result.enhanced_with(enhance);
         }
         result
     }
