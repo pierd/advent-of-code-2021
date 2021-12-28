@@ -48,7 +48,7 @@ fn solve_simple(cubes: &[(bool, [(Int, Int); 3])]) -> usize {
         .count()
 }
 
-fn splice_from_prev<K, V>(tree: &mut BTreeMap<K, V>, key: K)
+fn fork_from_prev<K, V>(tree: &mut BTreeMap<K, V>, key: K)
 where
     K: Ord + Clone,
     V: Clone,
@@ -56,21 +56,21 @@ where
     if let Some((prev_key, prev_val)) = tree.range(..=key.clone()).next_back() {
         if prev_key < &key {
             // no entry -> create one from previous entry
-            let spliced = prev_val.clone();
-            tree.insert(key, spliced);
+            let forked = prev_val.clone();
+            tree.insert(key, forked);
         }
     }
 }
 
-fn splice_and_mut<K, V, F>(tree: &mut BTreeMap<K, V>, from: K, to: K, transform: F)
+fn fork_and_mut<K, V, F>(tree: &mut BTreeMap<K, V>, from: K, to: K, transform: F)
 where
     K: Ord + Clone,
     V: Clone,
     F: Fn(&mut V),
 {
     assert!(from < to);
-    splice_from_prev(tree, from.clone());
-    splice_from_prev(tree, to.clone());
+    fork_from_prev(tree, from.clone());
+    fork_from_prev(tree, to.clone());
     for (_, v) in tree.range_mut(from..to) {
         transform(v);
     }
@@ -126,9 +126,9 @@ fn solve(cubes: &[(bool, [(Int, Int); 3])]) -> Int {
     };
 
     for (on, cube) in cubes {
-        splice_and_mut(&mut space, cube[0].0, cube[0].1 + 1, |subspace| {
-            splice_and_mut(subspace, cube[1].0, cube[1].1 + 1, |subspace| {
-                splice_and_mut(subspace, cube[2].0, cube[2].1 + 1, |b| *b = *on);
+        fork_and_mut(&mut space, cube[0].0, cube[0].1 + 1, |subspace| {
+            fork_and_mut(subspace, cube[1].0, cube[1].1 + 1, |subspace| {
+                fork_and_mut(subspace, cube[2].0, cube[2].1 + 1, |b| *b = *on);
             });
         });
     }
@@ -181,12 +181,12 @@ mod tests {
     }
 
     #[test]
-    fn test_splice() {
+    fn test_fork_and_mut() {
         let mut tree: BTreeMap<isize, bool> = Default::default();
         tree.insert(isize::MIN, false);
-        splice_and_mut(&mut tree, 0, 10, |b| *b = true);
-        splice_and_mut(&mut tree, 5, 10, |b| *b = false);
-        splice_and_mut(&mut tree, 7, 15, |b| *b = true);
+        fork_and_mut(&mut tree, 0, 10, |b| *b = true);
+        fork_and_mut(&mut tree, 5, 10, |b| *b = false);
+        fork_and_mut(&mut tree, 7, 15, |b| *b = true);
         let mut iter = tree.into_iter();
         assert_eq!(iter.next(), Some((isize::MIN, false)));
         assert_eq!(iter.next(), Some((0, true)));
@@ -201,9 +201,9 @@ mod tests {
     fn test_iter_range() {
         let mut tree: BTreeMap<isize, bool> = Default::default();
         tree.insert(isize::MIN, false);
-        splice_and_mut(&mut tree, 0, 10, |b| *b = true);
-        splice_and_mut(&mut tree, 5, 10, |b| *b = false);
-        splice_and_mut(&mut tree, 7, 15, |b| *b = true);
+        fork_and_mut(&mut tree, 0, 10, |b| *b = true);
+        fork_and_mut(&mut tree, 5, 10, |b| *b = false);
+        fork_and_mut(&mut tree, 7, 15, |b| *b = true);
         let mut iter = BTreeMapRangeIter::with_btreemap(&tree);
         assert_eq!(iter.next(), Some((&isize::MIN, &0, &false)));
         assert_eq!(iter.next(), Some((&0, &5, &true)));
