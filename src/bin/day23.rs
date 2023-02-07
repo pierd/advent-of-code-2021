@@ -529,7 +529,7 @@ mod tests {
     use super::*;
 
     fn solved_state() -> State {
-        State::new_shallow(ALL_AMPH_TYPES.clone(), ALL_AMPH_TYPES.clone())
+        State::new_shallow(ALL_AMPH_TYPES, ALL_AMPH_TYPES)
     }
 
     fn sample_state() -> State {
@@ -583,8 +583,8 @@ mod tests {
         ));
         assert_eq!(state.get(Position::In(AmphType::A)), None);
         assert_eq!(state.get(Position::LeftOf(AmphType::C)), Some(AmphType::A));
-        assert_eq!(state.is_empty(Position::In(AmphType::A)), true);
-        assert_eq!(state.is_empty(Position::LeftOf(AmphType::C)), false);
+        assert!(state.is_empty(Position::In(AmphType::A)));
+        assert!(!state.is_empty(Position::LeftOf(AmphType::C)));
     }
 
     #[test]
@@ -599,9 +599,7 @@ mod tests {
             for room in ALL_AMPH_TYPES {
                 assert!(
                     reachability[position.id()][room.id()],
-                    "position = {:?}, room = {:?}",
-                    position,
-                    room
+                    "position = {position:?}, room = {room:?}"
                 );
             }
         }
@@ -623,9 +621,7 @@ mod tests {
             for room in ALL_AMPH_TYPES {
                 assert!(
                     reachability[position.id()][room.id()],
-                    "position = {:?}, room = {:?}",
-                    position,
-                    room
+                    "position = {position:?}, room = {room:?}"
                 );
             }
         }
@@ -637,17 +633,13 @@ mod tests {
             for room in [AmphType::A, AmphType::B] {
                 assert!(
                     reachability[position.id()][room.id()],
-                    "position = {:?}, room = {:?}",
-                    position,
-                    room
+                    "position = {position:?}, room = {room:?}"
                 );
             }
             for room in [AmphType::C, AmphType::D] {
                 assert!(
                     !reachability[position.id()][room.id()],
-                    "position = {:?}, room = {:?}",
-                    position,
-                    room
+                    "position = {position:?}, room = {room:?}"
                 );
             }
         }
@@ -659,17 +651,13 @@ mod tests {
             for room in [AmphType::A, AmphType::B] {
                 assert!(
                     !reachability[position.id()][room.id()],
-                    "position = {:?}, room = {:?}",
-                    position,
-                    room
+                    "position = {position:?}, room = {room:?}"
                 );
             }
             for room in [AmphType::C, AmphType::D] {
                 assert!(
                     reachability[position.id()][room.id()],
-                    "position = {:?}, room = {:?}",
-                    position,
-                    room
+                    "position = {position:?}, room = {room:?}"
                 );
             }
         }
@@ -781,8 +769,7 @@ mod tests {
         for (mv, cost) in expected_moves_with_energy.iter() {
             assert!(
                 is_in_possible_moves(&state, *mv),
-                "not in possible moves: {:?}",
-                mv
+                "not in possible moves: {mv:?}"
             );
             let (new_cost, new_state) = state.with_move_applied(*mv);
             assert_eq!(new_cost, *cost);

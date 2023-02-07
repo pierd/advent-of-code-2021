@@ -27,7 +27,7 @@ fn step(map: &mut [Vec<Option<Direction>>]) -> usize {
     let mut to_move = Vec::new();
     for (row_idx, row) in map.iter().enumerate() {
         for (col_idx, d) in row.iter().enumerate() {
-            if *d == Some(Direction::East) && row[(col_idx + 1) % cols] == None {
+            if *d == Some(Direction::East) && row[(col_idx + 1) % cols].is_none() {
                 to_move.push((row_idx, col_idx));
             }
         }
@@ -41,7 +41,7 @@ fn step(map: &mut [Vec<Option<Direction>>]) -> usize {
     let mut to_move = Vec::new();
     for (row_idx, row) in map.iter().enumerate() {
         for (col_idx, d) in row.iter().enumerate() {
-            if *d == Some(Direction::South) && map[(row_idx + 1) % rows][col_idx] == None {
+            if *d == Some(Direction::South) && map[(row_idx + 1) % rows][col_idx].is_none() {
                 to_move.push((row_idx, col_idx))
             }
         }

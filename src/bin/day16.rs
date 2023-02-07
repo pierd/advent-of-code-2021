@@ -168,7 +168,7 @@ mod tests {
 
     #[test]
     fn test_str_to_bits() {
-        let mut iter = "0F".chars().flat_map(|c| hex2bits(c));
+        let mut iter = "0F".chars().flat_map(hex2bits);
         assert_eq!(iter.next(), Some(false));
         assert_eq!(iter.next(), Some(false));
         assert_eq!(iter.next(), Some(false));

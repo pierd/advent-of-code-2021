@@ -26,7 +26,7 @@ impl Vector {
         self.0
             .iter()
             .zip(other.0.iter())
-            .map(|(l, r)| (l - r).abs() as usize)
+            .map(|(l, r)| (l - r).unsigned_abs())
             .sum()
     }
 }

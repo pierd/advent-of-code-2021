@@ -29,7 +29,7 @@ enum Pair {
 impl std::fmt::Debug for Pair {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Self::Num(n) => f.write_fmt(format_args!("{}", n)),
+            Self::Num(n) => f.write_fmt(format_args!("{n}")),
             Self::Cons(left, right) => {
                 f.write_char('[')?;
                 left.fmt(f)?;
